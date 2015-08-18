@@ -1,7 +1,116 @@
-<!DOCTYPE html>
-<html>
-<body>
+<!doctype html>
+<html lang="en" ng-app="StarterApp">
+  <head>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.1/angular-material.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+<meta name="viewport" content="initial-scale=1"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    
+  </head>
+<body layout="column" ng-controller="AppCtrl">
+<md-toolbar layout="row">
+<div class="md-toolbar-tools" ng-controller="BasicDemoCtrl as ctrl">
+<md-button ng-click="toggleSidenav('left')" hide-gt-sm class="md-icon-button">
+<md-icon aria-label="Menu" md-svg-icon="https://s3-us-west-2.amazonaws.com/s.cdpn.io/68133/menu.svg"></md-icon>
+</md-button>
 <h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+<md-menu>
+<md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="ctrl.openMenu($mdOpenMenu, $event)">
+<md-icon md-menu-origin md-svg-icon="call:phone"></md-icon>
+</md-button>
+<md-menu-content width="4">
+<md-menu-item>
+<md-button ng-click="ctrl.redial($event)">
+<md-icon md-svg-icon="call:dialpad" md-menu-align-target></md-icon>
+Redial
+</md-button>
+</md-menu-item>
+<md-menu-item>
+<md-button disabled="disabled" ng-click="ctrl.checkVoicemail()">
+<md-icon md-svg-icon="call:voicemail"></md-icon>
+Check voicemail
+</md-button>
+</md-menu-item>
+<md-menu-divider></md-menu-divider>
+<md-menu-item>
+<md-button ng-click="ctrl.toggleNotifications()">
+<md-icon md-svg-icon="social:notifications-{{ctrl.notificationsEnabled ? 'off' : 'on'}}"></md-icon>
+{{ctrl.notificationsEnabled ? 'Disable' : 'Enable' }} notifications
+</md-button>
+</md-menu-item>
+</md-menu-content>
+</md-menu>
+</div>
+</md-toolbar>
+<div layout="row" flex>
+<md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
+</md-sidenav>
+<div layout="column" flex id="content">
+<md-content layout="column" flex class="md-padding">
+</md-content>
+</div>
+</div>
+ 
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-animate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular-aria.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.1/angular-material.min.js"></script>
+<script type="text/javascript">
+
+    $(function(){
+		// Preloader
+    	$('.loader').fadeOut();    
+    	$('#preloader').delay(350).fadeOut('slow');
+    	$('body').delay(350);
+    });
+
+    
+    angular
+    .module('StarterApp', ['ngMaterial'])
+    .config(function($mdIconProvider) {
+      $mdIconProvider
+        //.startSymbol('{[{')
+        //.endSymbol('}]}')
+        .iconSet("call", 'http://moukail.nl/material/svg/communication-icons.svg', 24)
+        .iconSet("social", 'http://moukail.nl/material/svg/social-icons.svg', 24);
+    })
+    .controller('BasicDemoCtrl', function DemoCtrl($mdDialog) {
+      var originatorEv;
+
+      this.openMenu = function($mdOpenMenu, ev) {
+        originatorEv = ev;
+        $mdOpenMenu(ev);
+      };
+
+      this.notificationsEnabled = true;
+      this.toggleNotifications = function() {
+        this.notificationsEnabled = !this.notificationsEnabled;
+      };
+
+      this.redial = function() {
+        $mdDialog.show(
+          $mdDialog.alert()
+            .targetEvent(originatorEv)
+            .clickOutsideToClose(true)
+            .parent('body')
+            .title('Suddenly, a redial')
+            .content('You just called a friend; who told you the most amazing story. Have a cookie!')
+            .ok('That was easy')
+        );
+
+        originatorEv = null;
+      };
+
+      this.checkVoicemail = function() {
+        // This never happens.
+      };
+    }).controller('AppCtrl', ['$scope', '$mdSidenav', function($scope, $mdSidenav){
+        $scope.toggleSidenav = function(menuId) {
+            $mdSidenav(menuId).toggle();
+          };
+         
+        }]);
+    
+    </script>
 </body>
 </html>
